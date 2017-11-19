@@ -18,10 +18,19 @@ LeafletMap = function(divId, dataLayers) {
 
 LeafletMap.prototype.init = function () {
 
-	this.map = L.map(this.divId, {
+	var northEast = L.latLng(345, 570);
+	var southWest = L.latLng(500, 730);
+	var maxLatLngBounds = L.latLngBounds(southWest, northEast);
+
+	this.map  = L.map(this.divId, {
+		renderer: L.svg({
+			padding: 2
+		}),
+		zoom: 0,
+		maxZoom: 10,
+		minZoom: 0,
 		crs: L.CRS.Simple,
-		minZoom: 19,
-		maxZoom: 22,
+		maxBounds: L.GeoJSON.coordsToLatLngs(northEast, southWest),
 	});
 
 	this.map.on('baselayerchange', $.proxy(function(e) {
@@ -32,13 +41,11 @@ LeafletMap.prototype.init = function () {
 	this.overlays["Measurements"] = new L.FeatureGroup();
 	this.overlays["Labels"] = new L.FeatureGroup();
 	this.map.addLayer(this.overlays["Labels"]);
-
-
 	this.renderLayers();
 
 	this.map.on("overlayadd", $.proxy(function (o) {
-		if (o.layer == this.overlays["Measurements"]) this._showMeasurements = true;
-		if (o.layer == this.overlays["Labels"]) this._showLabels = true;
+		if (o.layer === this.overlays["Measurements"]) this._showMeasurements = true;
+		if (o.layer === this.overlays["Labels"]) this._showLabels = true;
 
 		this.renderParts();
 	}, this));
@@ -50,18 +57,17 @@ LeafletMap.prototype.init = function () {
 		this.renderParts();
 	}, this));
 
-	var northEast = this.map.unproject(L.point(0,599), 20);
-	var southWest = this.map.unproject(L.point(1506, 0), 20);
-	var maxLatLngBounds = L.latLngBounds(southWest, northEast);
 
-	var hall_h = L.tileLayer('map-tiles/{z}/tiles_{x}_{y}.png', {
-		minZoom: 19,
-		maxZoom: 22,
-		maxNativeZoom: 20,
-		bounds: maxLatLngBounds
+	tileLayer = L.tileLayer('https://34c3.c3nav.de/map/7/{z}/{x}/{y}.png', {
+		minZoom: 0,
+		bounds: maxLatLngBounds,
+		maxZoom: 18,
 	}).addTo(this.map);
 
-	this.map.setView(maxLatLngBounds.getCenter(), 20);
+
+	L.control.scale().addTo(this.map);
+
+	this.map.setView(maxLatLngBounds.getCenter(), 2);
 
 
 	this.map.on('draw:created', $.proxy(this.DrawEventHandler.drawCreated, this));
@@ -133,11 +139,12 @@ LeafletMap.prototype.renderLayers = function () {
 
 LeafletMap.prototype.renderMeasurements = function() {
 
-	for (key in this.currentLayer._layers) {
+	var value;
+	for (var key in this.currentLayer._layers) {
 		value = this.currentLayer._layers[key];
 
-		if (this._showMeasurements == true) {
-			value.showMeasurements();
+		if (this._showMeasurements === true) {
+			value.showMeasurements({showOnHover: true})
 		} else {
 			value.hideMeasurements();
 		}
@@ -239,17 +246,17 @@ LeafletMap.prototype.drawEditControl = function(editLayer) {
 
 
 LeafletMap.prototype.drawArea = function(areaDocument, areaLayer) {
-	polygon = L.polygon(areaDocument.latLngs, { color: areaDocument.color, showMeasurements: this._showMeasurements } );
+	polygon = L.polygon(areaDocument.latLngs, { color: areaDocument.color } );
 	polygon._leaflet_id = areaDocument._id;
 	polygon.addTo(areaLayer);
 
 	polygon.on("click", $.proxy(function(e) {
-		if (e.target.editing._enabled != true && !this._inDeleteMode) {
+		if (e.target.editing._enabled !== true && !this._inDeleteMode) {
 			Router.go('editAreaPage', { _id: e.target._leaflet_id });
 		}
 	}, this));
 
-	var tooltip = polygon.bindTooltip(areaDocument.title, {permanent: true, offset: [0,0], direction:"center", className: "no-tooltip"});
+	polygon.bindTooltip(areaDocument.title, {permanent: true, offset: [0,0], direction:"center", className: "no-tooltip"});
 	this.renderParts();
 }
 
@@ -260,7 +267,7 @@ LeafletMap.prototype.removeArea = function(areaDocument, areaLayer) {
 	for (key in layers) {
 		val = layers[key];
 
-		if (val._leaflet_id == areaDocument._id) {
+		if (val._leaflet_id === areaDocument._id) {
 			areaLayer.removeLayer(val);
 		}
 	}
