@@ -5,7 +5,6 @@ Meteor.startup(function() {
 	});
 
 	$(window).resize(); // trigger resize event
-	$.getScript('js/leaflet-measure-path.js');
 });
 
 // create marker collection
