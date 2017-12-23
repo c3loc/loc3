@@ -16,9 +16,16 @@ LeafletMap = function(divId, dataLayers) {
 	this.init();
 };
 
+LeafletMap.prototype.refreshC3NavCookie = function () {
+	Meteor.http.get("https://34c3.c3nav.de/api/users/current", [], function() {});
+};
+
 LeafletMap.prototype.init = function () {
 
-	var northEast = L.latLng(345, 570);
+	this.refreshC3NavCookie();
+	setInterval(this.refreshC3NavCookie, 30000);
+
+	var northEast = L.latLng(345, 520);
 	var southWest = L.latLng(500, 730);
 	var maxLatLngBounds = L.latLngBounds(southWest, northEast);
 
@@ -27,7 +34,8 @@ LeafletMap.prototype.init = function () {
 			padding: 2
 		}),
 		zoom: 0,
-		maxZoom: 10,
+		maxNativeZoom: 5,
+		maxZoom: 7,
 		minZoom: 0,
 		crs: L.CRS.Simple,
 		maxBounds: L.GeoJSON.coordsToLatLngs(northEast, southWest),
