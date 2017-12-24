@@ -1,3 +1,4 @@
+import { HTTP } from 'meteor/http'
 // on startup run resizing event
 Meteor.startup(function() {
 	$(window).resize(function() {
@@ -12,6 +13,21 @@ Meteor.subscribe('areas');
 
 
 Template.mapPage.rendered = function() {
+
+		HTTP.call("GET", "https://34c3.c3nav.de/api/updates/fetch/", {
+			beforeSend: function(xhttp) {
+				xhttp.withCredentials = true;
+			}
+		}, function() {});
+
+		setInterval(function() {
+			HTTP.call("GET", "https://34c3.c3nav.de/api/updates/fetch/", {
+				beforeSend: function(xhttp) {
+					xhttp.withCredentials = true;
+				}
+			}, function() {});
+		}, 30000);
+
 	$('#map').css('height', window.innerHeight - 82);
 
 	var leafletMap = new LeafletMap("map");
