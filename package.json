@@ -21,7 +21,7 @@
   "dependencies": {
     "babel-runtime": "^6.26.0",
     "bcrypt": "^0.8.7",
-    "leaflet": "^1.2.0",
+    "leaflet": "^1.3.4",
     "leaflet-draw": "^0.4.13",
     "leaflet-draw-drag": "^0.4.5"
   }

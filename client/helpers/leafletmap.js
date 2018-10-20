@@ -19,20 +19,24 @@ LeafletMap = function(divId, dataLayers) {
 
 LeafletMap.prototype.init = function () {
 
-	var northEast = L.latLng(345, 550);
-	var southWest = L.latLng(500, 730);
-	var maxLatLngBounds = L.latLngBounds(southWest, northEast);
+	var mapExtent = [12.40396534, 51.39629483, 12.40688955, 51.39867101];
+	var mapMinZoom = 16;
+	var mapMaxZoom = 23;
+	var bounds = new L.LatLngBounds(
+		new L.LatLng(mapExtent[1], mapExtent[0]),
+		new L.LatLng(mapExtent[3], mapExtent[2]));
 
 	this.map  = L.map(this.divId, {
-		renderer: L.svg({
+		/*renderer: L.svg({
 			padding: 2
 		}),
-		tileSize: 255,
-		zoom: 0,
+		tileSize: 255,*/
+		/*zoom: 0,
 		maxZoom: 7,
 		minZoom: 0,
 		crs: L.CRS.Simple,
-		maxBounds: L.GeoJSON.coordsToLatLngs(northEast, southWest),
+		maxBounds: L.GeoJSON.coordsToLatLngs(northEast, southWest),*/
+		maxBounds: bounds
 	});
 
 	this.map.on('baselayerchange', $.proxy(function(e) {
@@ -60,19 +64,23 @@ LeafletMap.prototype.init = function () {
 	}, this));
 
 
-	tileLayer = L.tileLayer('https://tiles.34c3.c3nav.de/7/{z}/{x}/{y}.png', {
-		minZoom: 0,
-		maxZoom: 7,
-		minNativeZoom: 0,
-		maxNativeZoom: 5,
-		bounds: maxLatLngBounds
+	L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		minZoom: mapMinZoom,
+		maxZoom: mapMaxZoom,
+		maxNativeZoom: 19,
+		attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+	}).addTo(this.map);
 
+	tileLayer = L.tileLayer('/map-tiles/{z}/{x}/{y}.png', {
+		minZoom: mapMinZoom,
+		maxZoom: mapMaxZoom,
+		bounds: bounds
 	}).addTo(this.map);
 
 
 	L.control.scale().addTo(this.map);
 
-	this.map.setView(maxLatLngBounds.getCenter(), 2);
+	this.map.setView(bounds.getCenter(), 2);
 
 
 	this.map.on('draw:created', $.proxy(this.DrawEventHandler.drawCreated, this));
@@ -91,7 +99,7 @@ LeafletMap.prototype.init = function () {
 	}
 
 
-}
+};
 
 LeafletMap.prototype.addDataLayer = function (dataLayer) {
 	if (this.dataLayers == null) this.dataLayers = [];

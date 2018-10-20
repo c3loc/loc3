@@ -14,20 +14,6 @@ Meteor.subscribe('areas');
 
 Template.mapPage.rendered = function() {
 
-		HTTP.call("GET", "https://34c3.c3nav.de/api/updates/fetch/", {
-			beforeSend: function(xhttp) {
-				xhttp.withCredentials = true;
-			}
-		}, function() {});
-
-		setInterval(function() {
-			HTTP.call("GET", "https://34c3.c3nav.de/api/updates/fetch/", {
-				beforeSend: function(xhttp) {
-					xhttp.withCredentials = true;
-				}
-			}, function() {});
-		}, 30000);
-
 	$('#map').css('height', window.innerHeight - 82);
 
 	var leafletMap = new LeafletMap("map");
@@ -42,8 +28,8 @@ Template.mapPage.rendered = function() {
 		}, leafletMap),
 		changed: $.proxy(function (newDocument, oldDocument) {
 
-			oldDataLayerName = this.currentDataLayer.layerName;
-			newDataLayer = new LeafletDataLayer(newDocument.title, newDocument._id);
+			var oldDataLayerName = this.currentDataLayer.layerName;
+			var newDataLayer = new LeafletDataLayer(newDocument.title, newDocument._id);
 
 			this.removeDataLayer(oldDocument._id);
 			this.addDataLayer(newDataLayer);
