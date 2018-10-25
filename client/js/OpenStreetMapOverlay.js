@@ -10,9 +10,11 @@ export class OpenStreetMapOverlay extends LeafletOverlay {
 		super.init();
 
 		this.tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-			maxZoom: 23,
+			minZoom: this.leafletMap.minZoom,
+			maxZoom: this.leafletMap.maxZoom,
 			maxNativeZoom: 19,
 			attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+			opacity: 0.2
 		});
 	}
 

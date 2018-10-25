@@ -21,6 +21,9 @@ export class LeafletMap {
 	_inDeleteMode = null;
 	drawEventHandler = null;
 
+	minZoom = 16;
+	maxZoom = 23;
+
 	constructor(divId) {
 		this.divId = divId;
 		this.init();
@@ -30,8 +33,6 @@ export class LeafletMap {
 	init() {
 
 		var mapExtent = [12.40396534, 51.39629483, 12.40688955, 51.39867101];
-		var mapMinZoom = 16;
-		var mapMaxZoom = 23;
 		var bounds = new L.LatLngBounds(
 			new L.LatLng(mapExtent[1], mapExtent[0]),
 			new L.LatLng(mapExtent[3], mapExtent[2]));
@@ -72,8 +73,8 @@ export class LeafletMap {
 		}, this));
 
 		tileLayer = L.tileLayer('/map-tiles/{z}/{x}/{y}.png', {
-			minZoom: mapMinZoom,
-			maxZoom: mapMaxZoom,
+			minZoom: this.minZoom,
+			maxZoom: this.maxZoom,
 			bounds: bounds
 		}).addTo(this.map);
 
