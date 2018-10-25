@@ -4,7 +4,18 @@
   {{#autoForm collection="Areas" id="areaForm" doc=this type="update"}}
     <fieldset>
         {{> afQuickField name='title'}}
-	    {{> afQuickField name='color'}}
+
+		<div class="form-group{{#if afFieldIsInvalid name='color'}} has-error{{/if}} colorpicker-component-left">
+			<label>{{ afFieldLabelText name='color' }}</label>
+			<div class="input-group">
+				<span class="input-group-addon"><i></i></span>
+				{{> afFieldInput name='color'}}
+			</div>
+			{{#if afFieldIsInvalid name='color'}}
+				<span class="help-block">{{afFieldMessage name='color'}}</span>
+			{{/if}}
+		</div>
+
 		{{> afQuickField name='comment' rows=6}}
 		{{> afQuickField name='layer'}}
     </fieldset>

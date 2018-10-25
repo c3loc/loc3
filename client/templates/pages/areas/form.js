@@ -1,3 +1,9 @@
+Template.editAreaPage.rendered = function() {
+	$('.colorpicker-component-left').colorpicker( { 'align': 'left' });
+
+};
+
+
 AutoForm.addHooks("areaForm", {
   after: {
 	  update: function(error, result, template) {

@@ -1,4 +1,6 @@
-import { HTTP } from 'meteor/http'
+import { LeafletDataLayer } from '../../js/LeafletDataLayer'
+import { LeafletMap } from "../../js/LeafletMap";
+
 // on startup run resizing event
 Meteor.startup(function() {
 	$(window).resize(function() {
@@ -17,7 +19,6 @@ Template.mapPage.rendered = function() {
 	$('#map').css('height', window.innerHeight - 82);
 
 	var leafletMap = new LeafletMap("map");
-	console.log(leafletMap);
 	Meteor.subscribe('layers');
 	Layers.find().observe({
 		added: $.proxy(function (newDocument) {
