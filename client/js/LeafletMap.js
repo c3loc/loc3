@@ -78,12 +78,13 @@ export class LeafletMap {
 			bounds: bounds
 		}).addTo(this.map);
 
+		var mapExtent2 = [12.40314095, 51.39684087, 12.40718382, 51.39878730];
 		L.tileLayer('/map-tiles-2/{z}/{x}/{y}.png', {
 			minZoom: 16,
 			maxZoom: 23,
 			bounds: new L.LatLngBounds(
-				new L.LatLng(51.39702199, 12.40313983),
-				new L.LatLng(51.39878779, 12.40506029)
+				new L.LatLng(mapExtent2[1], mapExtent2[0]),
+				new L.LatLng(mapExtent2[3], mapExtent2[2])
 			)
 		}).addTo(this.map);
 
