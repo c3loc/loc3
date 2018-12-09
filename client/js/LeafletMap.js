@@ -38,7 +38,7 @@ export class LeafletMap {
 			new L.LatLng(mapExtent[3], mapExtent[2]));
 
 		this.map  = L.map(this.divId, {
-			maxBounds: bounds
+			//maxBounds: bounds
 		});
 
 		this.drawEventHandler = new LeafletDrawEventHandler(this);
