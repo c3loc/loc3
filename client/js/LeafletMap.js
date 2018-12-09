@@ -80,10 +80,10 @@ export class LeafletMap {
 
 		L.tileLayer('/map-tiles-2/{z}/{x}/{y}.png', {
 			minZoom: 16,
-			maxZoom: 24,
+			maxZoom: 23,
 			bounds: new L.LatLngBounds(
-				new L.LatLng(51.39703246, 12.40310215),
-				new L.LatLng(51.39877547, 12.40510322)
+				new L.LatLng(51.39702199, 12.40313983),
+				new L.LatLng(51.39878779, 12.40506029)
 			)
 		}).addTo(this.map);
 
